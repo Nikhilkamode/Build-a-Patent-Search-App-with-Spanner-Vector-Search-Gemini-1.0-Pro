@@ -1,0 +1,35 @@
+After populating the insights in our table, we can now use these insights to generate embeddings. These embeddings help us in not relying on exact keyword matches, but help generate results based on conceptual similarities.
+
+Run the following query to generate embeddings:
+
+1.In the navigation menu, click Spanner Studio. The Explorer pane displays a list of the objects in your database.
+2.Open a new tab by clicking the New SQL editor tab.
+3.Run the following query to create the patents_data_embeddings table.
+
+CREATE TABLE patents_data_embeddings (id string(100), patents_embeddings ARRAY<FLOAT64>) PRIMARY KEY (id);
+4.Click Run. The results of your query appear in the Results table.
+5.Run the following query to generate embeddings.
+
+INSERT INTO patents_data_embeddings (id, patents_embeddings)
+SELECT id, embeddings.values as patents_embeddings
+FROM ML.PREDICT(MODEL text_embeddings,
+(SELECT id, gemini_response as content FROM patents_data_gemini));
+6. Click Run. The results of your query appear in the Results table.
+
+Observe results
+The table includes embeddings generated for the title and abstracted text.
+Let's run the following query to verify the results:
+select title, abstract, b.patents_embeddings from patents_data a inner join patents_data_embeddings b
+on a.id = b.id;
+
+Note: If the insert into patents_data_embeddings statement resulted in an error for you in the previous step, replace the patents_data_gemini table with the query in the workaround section. Your query will be:
+
+select title, abstract, b.patents_embeddings from patents_data a inner join 
+(SELECT id, embeddings.values as patents_embeddings
+FROM ML.PREDICT(MODEL text_embeddings,
+(SELECT id, gemini_response as content FROM (SELECT id, content as gemini_response
+FROM ML.PREDICT(MODEL gemini_pro_model,
+(select id, concat ('Identify the areas of work or keywords in this abstract', abstract) as prompt from patents_data b limit 50
+)))))) b
+on a.id = b.id;
+
