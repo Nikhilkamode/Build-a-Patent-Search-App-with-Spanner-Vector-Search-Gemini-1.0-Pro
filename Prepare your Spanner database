@@ -1,0 +1,26 @@
+Create a Spanner instance
+Create a Spanner instance named spanner-vertex.
+
+gcloud spanner instances create spanner-vertex \
+--config=regional-us-central1 \
+--description=spanner-vertex \
+--nodes=1
+
+Create a database
+1)In the Google Cloud console, open the Spanner page.
+2)Select the spanner-vertex instance from the list.
+3)Under Databases, click Create Database.
+4)Set the database name to patents.
+5)Click Create to create the database.
+
+Create a table
+1)In the Google Cloud console, open the Spanner page.
+2)Select the spanner-vertex instance from the list.
+3)Select the patents database.
+4)Under the Tables tab, click Create Table. The Spanner Studio page opens.
+5)Open a new tab by clicking the New SQL editor tab.
+
+Run the following query:
+CREATE TABLE patents_data (
+   id string(25), type string(25), number string(20), country string(2), date string(20), abstract string(300000), title string(100000),kind string(5), num_claims numeric, filename string(100), withdrawn numeric, 
+) PRIMARY KEY (id);
