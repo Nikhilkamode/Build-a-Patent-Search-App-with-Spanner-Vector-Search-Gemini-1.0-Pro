@@ -1,0 +1,9 @@
+The Google Patents Public Datasets on BigQuery will be used as our dataset. We will use Spanner Studio to run our queries. The spanner-gemini-search repository includes the insert_into_patents_data.sql script we will run to load the patent data
+
+1.In the Google Cloud console, open the Spanner page.
+2.Select the spanner-vertex instance from the list.
+3.Select the patents database.
+4.In the navigation menu, click Spanner Studio. The Explorer pane displays a list of the objects in your database.
+5.Open a new tab by clicking the New SQL editor tab.
+6.Copy the insert query statement from the insert_into_patents_data.sql script in the editor. You can copy 50-100 insert statements for a quick demo of this use case.
+7.Click Run. The results of your query appear in the Results table.
