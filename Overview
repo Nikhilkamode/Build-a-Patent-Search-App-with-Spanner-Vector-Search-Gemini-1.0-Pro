@@ -1,0 +1,7 @@
+What you'll build
+1)Create a Spanner instance
+2)Load a Google Patents Public Datasets
+3)Create a remote model for text embeddings with Gemini 1.0 Pro model
+4)Create generative insights from loaded dataset
+5)Generate embeddings from the insights
+6)Issue similarity search queries against the dataset
