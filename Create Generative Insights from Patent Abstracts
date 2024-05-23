@@ -1,0 +1,43 @@
+We will create a patents_data_gemini table to store generative insights that we will generate using the Gemini 1.5 Pro model we earlier created.
+
+Create the table
+1.In the navigation menu, click Spanner Studio. The Explorer pane displays a list of the objects in your database.
+2.Open a new tab by clicking the New SQL editor tab.
+3.Run the following query:
+
+CREATE TABLE patents_data_gemini (id string(100), gemini_response STRING(MAX)) PRIMARY KEY (id);
+4.Click Run. The results of your query appear in the Results table.
+
+Generate insights
+To populate the table with generative insights, it is recommended that you use an application that uses the batch write or mutations method. For this codelab, we will run the following DDL query up to 4 times to populate the table.
+
+INSERT INTO patents_data_gemini (id, gemini_response)
+SELECT id, content as gemini_response
+FROM ML.PREDICT(MODEL gemini_pro_model,
+(select id, concat ('Identify the areas of work or keywords in this abstract', abstract) as prompt from patents_data b where id not in (select id from patents_data_gemini) limit 50
+));
+
+If you are getting Quota Exceeded error at this step (possible in the case of the small margin free-credits), try to skip the insert and run only the select query in this case:
+
+Workaround section:
+
+SELECT id, content as gemini_response
+FROM ML.PREDICT(MODEL gemini_pro_model,
+(select id, concat ('Identify the areas of work or keywords in this abstract', abstract) as prompt from patents_data b limit 50
+))
+
+Observe insights
+The table includes insights that are generated for the 'Identify the areas of work or keywords in this abstract', prompt in the query.
+
+Let's run the following query to verify the results of the insights:
+
+select title, abstract, gemini_response from patents_data a inner join patents_data_gemini b
+on a.id = b.id;
+
+Please note if you were getting the error message during the patents_data_gemini table creation step, replace the table name in the above select query with the query in the workaround section. So you would run the below instead:
+
+select title, abstract, gemini_response from patents_data a inner join (SELECT id, content as gemini_response
+FROM ML.PREDICT(MODEL gemini_pro_model,
+(select id, concat ('Identify the areas of work or keywords in this abstract', abstract) as prompt from patents_data b limit 50
+))) b
+on a.id = b.id;
