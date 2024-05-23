@@ -1,0 +1,16 @@
+After the patent data is loaded to the database, we will create a remote model that uses Gemini 1.0 Pro Vertex AI model to generate a summarized set of title and keywords.
+Run the following DDL command in Spanner Studio Editor:
+1.In the navigation menu, click Spanner Studio. The Explorer pane displays a list of the objects in your database.
+2.Open a new tab by clicking the New SQL editor tab.
+3.Run the following query:
+
+CREATE MODEL gemini_pro_model INPUT(
+prompt STRING(MAX),
+) OUTPUT(
+content STRING(MAX),
+) REMOTE OPTIONS (
+endpoint = '//aiplatform.googleapis.com/projects/<<YOUR_PROJECT_ID>>/locations/us-central1/publishers/google/models/gemini-pro',
+default_batch_size = 1
+);
+
+4.Click Run. The results of your query appear in the Results table.
