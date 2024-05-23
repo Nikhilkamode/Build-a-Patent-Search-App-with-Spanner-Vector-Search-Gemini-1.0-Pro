@@ -1,0 +1,5 @@
+To avoid incurring charges to your Google Cloud account for the resources used in this post, follow these steps:
+
+1.In the Google Cloud console, go to the Manage resources page.
+2.In the project list, select the project that you want to delete, and then click Delete.
+3.In the dialog, type the project ID, and then click Shut down to delete the project.
