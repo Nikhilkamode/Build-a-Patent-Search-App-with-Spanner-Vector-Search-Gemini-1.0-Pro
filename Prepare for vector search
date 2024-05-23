@@ -1,0 +1,36 @@
+Now that we have generated text embeddings, we can prepare our web application to be ready for performing similarity vector searches. In this codelab, we are creating a web application that includes the logic to give search results based on K-Nearest Neighbors Similarity Search capability. You can use this prepared dataset with a search app to visualize how the search results appear.
+
+For our codelab, we will run a sample query that searches for a prompt, generates results based on context, and limits the results to 10 entries.
+
+Run the following query:
+
+1.In the navigation menu, click Spanner Studio. The Explorer pane displays a list of the objects in your database.
+2.Open a new tab by clicking the New SQL editor tab.
+3.Run the following query to create the patents_data_embeddings table.
+
+SELECT a.id, a.title, a.abstract, 'A new Natural Language Processing related Machine Learning Model' search_text, COSINE_DISTANCE(c.patents_embeddings,
+(SELECT embeddings.values
+FROM ML.PREDICT(
+MODEL text_embeddings,
+(SELECT 'A new Natural Language Processing related Machine Learning Model' as content)))) as distance
+FROM patents_data a inner join patents_data_geminib on a.id = b.id
+inner join patents_data_embeddings c on a.id = c.id
+ORDER BY distance
+LIMIT 10;
+
+4.Click Run. The results of your query appear in the Results table.
+
+Note: For those who encountered quota errors in one of the earliest insert statements, you can skip all the other steps and directly run the below query to observe the results of performing nearest neighbor search on vector embeddings in Spanner database:
+SELECT a.id, a.title, a.abstract, 'A new Natural Language Processing related Machine Learning Model' search_text, COSINE_DISTANCE(c.patents_embeddings,
+(SELECT embeddings.values
+FROM ML.PREDICT(
+MODEL text_embeddings,
+(SELECT 'A new Natural Language Processing related Machine Learning Model' as content)))) as distance
+FROM patents_data a inner join (SELECT id, embeddings.values as patents_embeddings
+FROM ML.PREDICT(MODEL text_embeddings,
+(SELECT id, gemini_response as content FROM (SELECT id, content as gemini_response
+FROM ML.PREDICT(MODEL gemini_pro_model,
+(select id, concat ('Identify the areas of work or keywords in this abstract', abstract) as prompt from patents_data b 
+)))))) c on a.id = c.id
+ORDER BY distance
+LIMIT 2;
