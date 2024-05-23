@@ -1,0 +1,17 @@
+The result of the earlier step includes a consolidated summary consisting of a title and keywords. We will convert this response into embeddings that will help us generate appropriate matches when we run a query. We will use the Text Embedding Gecko 003 model from Vertex AI remotely from Spanner.
+
+1.In the navigation menu, click Spanner Studio. The Explorer pane displays a list of the objects in your database.
+2.Open a new tab by clicking the New SQL editor tab.
+3.Run the following query:
+
+CREATE MODEL text_embeddings INPUT(content STRING(MAX))
+OUTPUT(
+ embeddings
+   STRUCT<
+     statistics STRUCT<truncated BOOL, token_count FLOAT64>,
+     values ARRAY<FLOAT64>>
+)
+REMOTE OPTIONS (
+ endpoint = '//aiplatform.googleapis.com/projects/<<YOUR_PROJECT_ID>>/locations/us-central1/publishers/google/models/textembedding-gecko@003');
+
+4.Click Run. The results of your query appear in the Results table.
