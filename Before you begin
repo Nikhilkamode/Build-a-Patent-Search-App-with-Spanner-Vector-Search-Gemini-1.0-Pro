@@ -1,0 +1,15 @@
+Create a project
+In the Google Cloud Console, on the project selector page, select or create a Google Cloud project.
+Make sure that billing is enabled for your Cloud project. Learn how to check if billing is enabled on a project .
+You'll use Cloud Shell, a command-line environment running in Google Cloud that comes preloaded with bq. Click Activate Cloud Shell at the top of the Google Cloud console.
+Once connected to Cloud Shell, you check that you're already authenticated and that the project is set to your project ID using the following command:
+   gcloud auth list
+
+Run the following command in Cloud Shell to confirm that the gcloud command knows about your project.
+    gcloud config list project
+
+If your project is not set, use the following command to set it:
+   gcloud config set project <YOUR_PROJECT_ID>
+
+Navigate to the Gemini for Google Cloud Marketplace to enable the API. You can also use the following command in the Cloud Shell terminal:
+gcloud services enable spanner.googleapis.com --project PROJECT_ID
